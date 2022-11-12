@@ -1,4 +1,4 @@
-Abre el archivo config.json:
+Abre el archivo configuracion.json:
 
 tokendiscord: Para conseguir un BOT y el token deberas de entrar en el siguiente enlace: https://discord.com/developers/applications y crear tu propio BOT<
 
