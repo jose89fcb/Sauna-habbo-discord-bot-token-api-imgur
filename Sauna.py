@@ -17,7 +17,7 @@ bot.remove_command("help") # Borra el comando por defecto !help
 @bot.command()
 async def sauna(ctx,   keko, *, keko2):
     await ctx.message.delete()
-    await ctx.send("Generando expositor de habbo...", delete_after=0)
+    await ctx.send("Generando Sauna de habbo...", delete_after=0)
     time.sleep(3)
     
     response = requests.get(f"https://www.habbo.es/api/public/users?name={keko}")
