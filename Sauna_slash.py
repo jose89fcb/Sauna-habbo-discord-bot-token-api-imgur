@@ -303,6 +303,8 @@ async def _sauna(ctx:SlashContext, keko1:str, keko2:str, hotel:str):
     except FileNotFoundError:
         error_message = f"Error: La skin '{keko1} - {keko2}' no existe."
         await ctx.send(error_message)
+    except UnboundLocalError:
+        habbo=":("
 
 
 
