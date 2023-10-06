@@ -16,6 +16,8 @@ y arriba te aparecera una url larga copiala en el block de notas
 y localiza el parametro: access_token
 
 Copia el codigo largo
+
+y lo añades en el archivo configuracion.json
 <br>
 
 
