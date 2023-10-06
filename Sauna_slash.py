@@ -311,7 +311,57 @@ async def _sauna(ctx:SlashContext, keko1:str, keko2:str, hotel:str):
 
 
 
-    #await ctx.send(file=discord.File(fp=image_binary, filename='keko.png'))
+@slash.slash(
+    name="borrar", description="Escribe La id para borrar la iamgen",
+    options=[
+                create_option(
+                  name="borrar_imagen",
+                  description="Escribe el ID para borrar la imagen",
+                  option_type=3,
+                  required=True
+                ),
+                 
+    ])
+                  
+            
+             
+
+    
+
+
+async def borrar(ctx:SlashContext, borrar_imagen:str):
+    
+    
+
+    url = f"https://api.imgur.com/3/image/{borrar_imagen}"
+    if len(borrar_imagen)  !=15:
+        await ctx.send("Sólo está permitido 15 digitos")
+        return
+    
+    payload={}
+    files={}
+    
+    headers = {
+        'Authorization': "Bearer " +  config["token_imgur"]}
+    response = requests.request("DELETE", url, headers=headers, data=payload, files=files)
+
+    embed=discord.Embed(title="", description="Imagen borrada con exito!", color=0x00ff11)
+    if response.status_code ==200:
+            await ctx.send(embed=embed, hidden=True)
+
+    embed=discord.Embed(title="", description="No está permitido paginas webs", color=0xff0019)        
+    if response.status_code ==400:
+        await ctx.send(embed=embed, hidden=True)  
+
+    embed=discord.Embed(title="", description="Error!", color=0xff0019)   
+    if response.status_code ==403:
+        await ctx.send(embed=embed, hidden=True) 
+
+
+
+    embed=discord.Embed(title="", description="formato imagen no está permitido", color=0xff0019)   
+    if response.status_code ==405:
+         await ctx.send(embed=embed, hidden=True)
     
          
         
