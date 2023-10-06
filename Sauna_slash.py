@@ -8,10 +8,12 @@ from PIL import Image, ImageDraw, ImageFont, ImageFile
 from discord_slash import SlashCommand
 from discord_slash.utils.manage_commands import create_choice, create_option
 from discord_slash import SlashCommand, SlashContext
+import base64
 
 
 with open("configuracion.json") as f:
     config = json.load(f)
+    headers = {'Authorization': 'Bearer ' + config["token_imgur"],}
 
 bot = commands.Bot(command_prefix='!', description="ayuda bot") #Comando
 bot.remove_command("help") # Borra el comando por defecto !help
@@ -247,10 +249,68 @@ async def _sauna(ctx:SlashContext, keko1:str, keko2:str, hotel:str):
      with io.BytesIO() as image_binary:
          img1.save(image_binary, 'PNG')
          image_binary.seek(0)
+         img_base64 = base64.b64encode(image_binary.read()).decode('utf-8')
 
-         await ctx.send(file=discord.File(fp=image_binary, filename='keko.png'))
-    except UnboundLocalError:
-        habbo=":("
+         params = {
+                'title': f'Imagen subida por {ctx.author.display_name} Servidor de discord {ctx.guild.name}',
+                'description': f'Podras generar tú keko de Habbo Hotel en el servidor de discord {ctx.guild.name}',
+                'name': 'Habbo Hotel',
+                'image': img_base64,
+            }
+
+         r = requests.post(f'https://api.imgur.com/3/image', headers=headers, data=params)
+         data = r.json()["data"]["link"]
+         id = r.json()["data"]["id"]
+         borrar = r.json()["data"]["deletehash"]
+
+         embed = discord.Embed(title="Habbo Hotel", url="https://twitter.com/jose89fcb", description=f"[Descargar Skin](https://imgur.com/{id}.png)", color=discord.Colour.random())
+         embed.set_footer(text=f"BOT Programado Por Jose89fcb")
+
+         image_data = io.BytesIO(base64.b64decode(img_base64))
+         image_file = discord.File(image_data, filename=f'keko.png')
+         embed.set_image(url=f"attachment://keko.png")
+
+         await ctx.send(embed=embed, file=image_file)
+
+         embed = discord.Embed(title="Este mensaje solo lo podrás ver tú",
+                                  description=f"Hola, {ctx.author.mention}\n\n\n\nEste es tú código: **{borrar}** para el usuario de Habbo **{keko1} - {keko2}** por si quieres borrar la imagen con el comando /borrar + código\n\n**Aviso:** Esto sólo podrás borrar la imagen alojada en imgur.com él código lo podrás ver tú solo (NO LO COMPARTAS CON NADIE)",
+                                  color=discord.Colour.random())
+
+         await ctx.send(
+                f"Link directo:\n```{data}```\nBBCode(Para foros):\n```[img]{data}[/img]```\nCódigo html: ```<a href='{data}'><img src='{data}' title='{keko1} - {keko2}' /></a>``` \nID:```{id}```", hidden=True, embed=embed)
+
+         await ctx.message.add_reaction("👍")
+         await ctx.message.add_reaction("👎")
+         await ctx.message.add_reaction("💩")
+         await ctx.message.add_reaction("😍")
+
+         try:
+                embed = discord.Embed(title=f"Código para {keko1}-{keko2}")
+                embed.add_field(name=f"👇👇👇👇",
+                                value=f"Este es tú código **{borrar}** para poder borrar la imagen de **{keko1} - {keko2}**",
+                                inline=False)
+
+                await ctx.author.send(embed=embed)
+                await ctx.author.send(f"\n\n{borrar}")
+
+                await ctx.send("Te acabo de enviar un mensaje privado", hidden=True)
+
+         except discord.errors.Forbidden:
+                await ctx.send(
+                    "No pudimos enviarte el mensaje privado, => click en ajustes de usuario => privacidad y seguridad => permitir mensajes directos...\n\nNo te preocupes, el mensaje privado solo guarda el código qué te he mendado más arriba y poder borrar la imagen, por si lo pierdes al cerrar discord",
+                    hidden=True)
+
+    except FileNotFoundError:
+        error_message = f"Error: La skin '{keko1} - {keko2}' no existe."
+        await ctx.send(error_message)
+
+
+
+
+
+
+    #await ctx.send(file=discord.File(fp=image_binary, filename='keko.png'))
+    
          
         
         
