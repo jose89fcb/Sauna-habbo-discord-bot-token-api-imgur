@@ -1,3 +1,7 @@
+Para usar el bot para que suba la imagen a imgur debes de usar el bot  <a href="https://github.com/jose89fcb/Sauna-habbo-discord-bot/blob/main/Sauna_slash.py">https://github.com/jose89fcb/Sauna-habbo-discord-bot/blob/main/Sauna_slash.py</a>
+
+Sólo falta que añadas tú el token 👇
+
 1.-)Ingresar al siguiente link https://api.imgur.com/oauth2/addclient
 
 2.-) al presionar el boton enviar te llevara a otra pagina donde tendras que copiar client_id
